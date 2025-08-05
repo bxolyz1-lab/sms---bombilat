@@ -222,7 +222,7 @@ function showValidUsers() {
 }
 
 function sendLog(sender, number, result) {
-  fetch("https://krvzx7.pythonanywhere.com/smslog", {
+  fetch("http://192.168.8.34:5000/smslog", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ sender, number, result })
