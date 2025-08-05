@@ -300,14 +300,16 @@ function updateChancesDisplay() {
 
 function downloadLog() {
   const log = document.getElementById("logBox").innerText;
-  const blob = new Blob([log], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "sms_log.txt";
-  a.click();
-}
+  const sender = currentUser || "Admin";
 
+  fetch("http://127.0.0.1:5000/smslog", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ sender, log })
+  }).then(res => res.json())
+    .then(data => alert("✅ Log saved to Termux"))
+    .catch(err => alert("❌ Failed to send log to Termux: " + err.message));
+}
 function startSimulation() {
   let number = document.getElementById("number").value.trim();
   const count = parseInt(document.getElementById("count").value.trim());
