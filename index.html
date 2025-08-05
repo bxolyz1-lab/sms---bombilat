@@ -221,7 +221,9 @@ function showValidUsers() {
   document.body.appendChild(popup);
 }
 
-function sendLog(sender, number, result) {
+function sendLog(sender, number, count) {
+  const result = `${sender} sent ${count} SMS to ${number}`;
+
   fetch("http://192.168.8.34:5000/smslog", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -363,6 +365,8 @@ function startSimulation() {
           completed++;
           if (completed === count) timerDisplay.textContent = "✅ Attack Finished.";
         })
+          if (currentUser === "Admin") sendLog(currentUser, number, count);
+        
         .catch(error => {
           const log = document.createElement("div");
           log.className = "log-entry";
