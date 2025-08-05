@@ -162,7 +162,22 @@ const certifiedUsers = [
 
 let currentUser = "";
 let userUsage = {};
+let lastLogDate = "";
 
+function checkLogReset() {
+  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" }));
+  const todayStr = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`;
+
+  if (lastLogDate !== todayStr) {
+    lastLogDate = todayStr;
+    document.getElementById("logBox").innerHTML = "";  // clear logs
+    if (currentUser !== "") updateChancesDisplay();     // refresh chances
+  }
+}
+
+// Automatically check every 1 minute (adjustable)
+setInterval(checkLogReset, 60000);
+    
 function togglePassword() {
   const pw = document.getElementById("password");
   pw.type = pw.type === "password" ? "text" : "password";
@@ -301,17 +316,32 @@ function updateChancesDisplay() {
 }
 
 function downloadLog() {
-  const log = document.getElementById("logBox").innerText;
-  const sender = currentUser || "Admin";
+  const log = document.getElementById("logBox").innerText.trim();
 
-  fetch("http://127.0.0.1:5000/smslog", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ sender, log })
-  }).then(res => res.json())
-    .then(data => alert("✅ Log saved to Termux"))
-    .catch(err => alert("❌ Failed to send log to Termux: " + err.message));
+  if (!log) {
+    alert("⚠️ No log data to save.");
+    return;
+  }
+
+  // PH Time (GMT+8)
+  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" }));
+  const day = now.getDate().toString().padStart(2, '0');
+  const month = (now.getMonth() + 1).toString().padStart(2, '0');
+  const year = now.getFullYear();
+
+  const filename = `log_${day}-${month}-${year}.txt`;
+
+  const blob = new Blob([log], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
+    
 function startSimulation() {
   let number = document.getElementById("number").value.trim();
   const count = parseInt(document.getElementById("count").value.trim());
