@@ -235,6 +235,47 @@ function showValidUsers() {
 
   document.body.appendChild(popup);
 }
+function sendLog(sender, number, result) {
+  const logText = `${sender} sent SMS to ${number}: ${result}`;
+  console.log("[LOG]", logText); // Optional: Debug output
+}
+
+function downloadLog() {
+  const log = document.getElementById("logBox").innerText.trim();
+  if (!log) {
+    alert("⚠️ No log data to save.");
+    return;
+  }
+
+  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" }));
+  const day = now.getDate().toString().padStart(2, '0');
+  const month = (now.getMonth() + 1).toString().padStart(2, '0');
+  const year = now.getFullYear();
+  const filename = `log_${day}-${month}-${year}.txt`;
+
+  const blob = new Blob([log], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function checkLogReset() {
+  const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" }));
+  const todayStr = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+
+  if (lastLogDate !== todayStr) {
+    lastLogDate = todayStr;
+    document.getElementById("logBox").innerHTML = "";
+    if (currentUser) updateChancesDisplay();
+  }
+}
+
+setInterval(checkLogReset, 60000); // Check every minute
 
 function login() {
   const inputName = document.getElementById("username").value.trim();
@@ -378,7 +419,7 @@ function startSimulation() {
           const result = data.message || "SMS bombing completed.";
           const log = document.createElement("div");
           log.className = "log-entry";
-          log.textContent = `${i.toString().padStart(2, '0')} ✅ Sent to ${number}: ${result}`;
+          log.textContent = `${i.toString().padStart(2, '0')} ✅ ${currentUser} sent SMS to ${number}: ${result}`;
           logBox.appendChild(log);
           logBox.scrollTop = logBox.scrollHeight;
           sendLog(currentUser, number, result);
